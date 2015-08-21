@@ -1,7 +1,7 @@
 # Online SSVEP-based BCI using Riemannian Geometry
 
 ## Description
-An analysis of Riemannian geometry based methods for classfication in SSVEP-based BCI.
+An analysis of Riemannian geometry based methods for classfication in SSVEP-based BCI. 
 The algorithms are tested on data available at https://github.com/sylvchev/dataset-ssvep-exoskeleton
 
 ## Dependencies
@@ -45,9 +45,19 @@ For for a quick run of the code, the data should be placed in the [/data](/data/
 10.`riemannian_classification_path.m`
 	produces the path taken by covariance matrices during experiment and how they are being classified.
 
+## CCA files
+Thiese files are in the [CCA](/CCA/) folder
+1. `cca_Lin2007.m`
+	Implementation of the CCA algorithm for SSVEP recognition proposed by Lin
+2. `Nakanishi2014.m`
+	Implementation of the CCA-based algorithm proposed by Nakanishi
+
 ### References
 
 * E. Kalunga, S. Chevallier, and Q. Barthelemy, Research Report: Using Riemannian geometry for SSVEP-based Brain Computer Interface, http://arxiv.org/pdf/1501.03227.pdf
 * A. Barachant, S. Bonnet, M. Congedo, C. Jutten, Multiclass brain-computer interface classication by Riemannian geometry, TBME, 2010, 2927-2935
+* Z. Lin, C. Zhang, W. Wu, X. Gao, Frequency recognition based on canonical correlation analysis for SSVEP-based BCIs, IEEE Transactions on Biomedical Engineering 53 (12) (2006) 2610–2614.
+* M. Nakanishi, Y. Wang, Y.-T. Wang, Y. Mitsukura, T.-P. Jung, A high-speed brain speller using steady-state visual evoked potentials, International journal of neural systems 24 (06) (2014) 1450019.
+
 
 
