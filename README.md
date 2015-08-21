@@ -46,12 +46,14 @@ For for a quick run of the code, the data should be placed in the [/data](/data/
 	produces the path taken by covariance matrices during experiment and how they are being classified.
 
 ## CCA files
-Thiese files are in the [CCA](/CCA/) folder
-1. `cca_Lin2007.m`
-	Implementation of the CCA algorithm for SSVEP recognition proposed by Lin
-2. `Nakanishi2014.m`
-	Implementation of the CCA-based algorithm proposed by Nakanishi
+Thiese files are in the [CCA](/CCA/) folder.
 
+1. `cca_Lin2007.m`
+	Implementation of the CCA algorithm for SSVEP recognition proposed by Lin.
+
+2. `Nakanishi2014.m`
+	Implementation of the CCA-based algorithm proposed by Nakanishi.
+	
 ### References
 
 * E. Kalunga, S. Chevallier, and Q. Barthelemy, Research Report: Using Riemannian geometry for SSVEP-based Brain Computer Interface, http://arxiv.org/pdf/1501.03227.pdf
