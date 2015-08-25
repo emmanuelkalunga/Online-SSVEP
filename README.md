@@ -7,6 +7,7 @@ The algorithms are tested on data available at https://github.com/sylvchev/datas
 ## Dependencies
 * Matlab 7 or later versions
 * Biosig toolbox: http://biosig.sourceforge.net/
+* Barachant Covariance toolbox: https://github.com/alexandrebarachant/covariancetoolbox
 
 ## Data
 
