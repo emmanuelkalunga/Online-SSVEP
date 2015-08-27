@@ -1,6 +1,6 @@
 clear all
 % load classProb
-load classProb_3class.mat; NbrSess = subNbrOfSess;
+load ('./results/classProb_3class.mat'); NbrSess = subNbrOfSess;
 Labels = Labels+1;
 sub11.Labels = Labels(:,:,1:NbrSess(11),11);
 sub11.classProb = classProb(:,:,:,1:NbrSess(11),11);
@@ -99,7 +99,7 @@ set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')
 %% PLOT AVERAGE CLASSIFICATION ERROR VS. PROBABILITY THRESHOLD
 clear all
 % load classProb
-load classProb_3class.mat; NbrSess = subNbrOfSess;
+load('./results/classProb_3class.mat'); NbrSess = subNbrOfSess;
 Labels = Labels+1;
 probIdx = 1;
 for prob = 0:0.1:1
@@ -190,7 +190,7 @@ set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')
 % ylim(hAx(2),[0 0.8])
 
 %% PLOT IMPACT OF W (window size/tLen) on online clasification accuracy and ITR
-load online_curve_tlen_3class_new.mat
+load('./results/online_curve_tlen_3class_new.mat')
 meanAcc = mean(subAcMean,2);
 stdAcc = std(subAcMean,[],2);
 meanItr = mean(itr3,2);
@@ -219,7 +219,7 @@ ylim(hAx(2),[0 max(meanItr)+max(stdItr)])
 %##################################################################################################################################################################
 clear all
 % load classProb
-load classProb_4class.mat; NbrSess = subNbrOfSess;
+load('./results/classProb_4class.mat'); NbrSess = subNbrOfSess;
 Labels = Labels+1;
 sub11.Labels = Labels(:,:,1:NbrSess(11),11);
 sub11.classProb = classProb(:,:,:,1:NbrSess(11),11);
@@ -316,7 +316,7 @@ set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')
 %% PLOT AVERAGE CLASSIFICATION ERROR VS. PROBABILITY THRESHOLD
 clear all
 % load classProb
-load classProb_4class.mat; NbrSess = subNbrOfSess;
+load('./results/classProb_4class.mat'); NbrSess = subNbrOfSess;
 Labels = Labels+1;
 probIdx = 1;
 for prob = 0:0.1:1
@@ -402,7 +402,7 @@ set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')
 % ylim(hAx(2),[0 0.8])
 
 %% PLOT IMPACT OF W (window size/tLen) on online clasification accuracy and ITR
-load online_curve_tlen_4class.mat
+load('./results/online_curve_tlen_4class.mat')
 meanAcc = mean(subAcMean,2);
 stdAcc = std(subAcMean,[],2);
 meanItr = mean(itr3,2);
@@ -428,7 +428,7 @@ ylim(hAx(1),[50 max((round(1000*meanAcc))/10+ (round(1000*stdAcc))/10)])
 ylim(hAx(2),[0 max(meanItr)+max(stdItr)])
 %% PLOT CONFUSION MATRIX AND ROC SPACE
 clear all
-load online_curve_potato_4class.mat
+load('./results/online_curve_potato_4class.mat')
 LabelAll = LabelAll+1;
 Yall = Yall+1;
 targets = zeros(numel(unique(LabelAll)), numel(LabelAll));
@@ -536,8 +536,142 @@ for sub = 16:17  %- ploting two subjects (11 and 12)
     spaceplots; %cutt off blank margins (from matlab filexchage)
 end
 
+%% COMPUTE AND PLOT ROC CURVE BASED ON RHO 
+clear all
+% load classProb
+load('./results/classProb_4class.mat'); NbrSess = subNbrOfSess;
+Labels = Labels+1;
+    
+rho4 = [];
+label4 = [];
+for sub = 1:12
+    sub_labels = Labels(:,:,1:NbrSess(sub),sub);
+    sub_prob = classProb(:,:,:,1:NbrSess(sub),sub); 
+    Lsub = [];
+    rho = [];
+    label = [];
+    for sess = 1:NbrSess(sub)    
+        for tr = 1:8*size(classProb,1)
+            Lsub(tr,sess) = sub_labels(tr,1,sess);
+            %rho(tr,:,sess) = sub_prob(:,:,tr,sess); %- Probability of groundtruth class (To be used as scrore in ROC)
+            %label(tr,:,sess) = repmat(Lsub(tr,sess),1,numel(rho(tr,:,sess)));
+            
+            c = zeros(numel(unique(sub_labels)),1);
+            c(Lsub(tr,sess)) = 1;
+            rho(tr,:,:) = sub_prob(:,:,tr,sess); %- Probability of groundtruth class (To be used as scrore in ROC)
+            label(tr,:,:) = repmat(c,1,size(sub_prob,2));
+        end
+        rho2 = permute(rho,[2 1 3]);
+        rho3 = rho2(:,:);
+        label2 = permute(label,[2 1 3]);
+        label3 = label2(:,:);
+        
+        rho4 = [rho4 rho3];
+        label4 = [label4 label3];
+    end   
+end
+plotroc(label4, rho4);
+[tpr,fpr,thresholds] = roc(label4, rho4);
+chance = [0 1];
+figure,
+plot([0 1], chance,'--r','LineWidth', 1, 'DisplayName', 'Random guess');
+legend('-DynamicLegend');
+hold all
+marker = ['h','p','s','d'];
+color = ['b','g','r','c'];
+legends = {'Resting class', '13Hz class', '21Hz class', '17Hz class'};
+for i = 1:numel(unique(Labels))
+    plot([fpr{i} 1], [tpr{i} 1], color(i), 'LineWidth', 2, 'MarkerSize',4, 'DisplayName', legends{i})
+    %legend('cl')
+end
+xlabel('FPR or (1-specificity)');
+ylabel('TPR or sensitivity');
+set(gca,'FontSize',14,'fontWeight','normal')
+set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')
 
+% %% COMPUTE AND PLOT ROC CURVE BASED ON RHO and DELTA
+% clear all
+% % load classProb
+% load('./results/classProbGrad_4class.mat'); NbrSess = subNbrOfSess;
+% Labels = Labels+1;
+%     
+% rho4 = []; 
+% delta4 = [];
+% label4 = [];
+% for sub = 1:12
+%     sub_labels = Labels(:,:,1:NbrSess(sub),sub);
+%     sub_prob = classProb(:,:,:,1:NbrSess(sub),sub); 
+%     sub_grad = classGrad(:,:,:,1:NbrSess(sub),sub); 
+%     Lsub = [];
+%     rho = [];
+%     delta = [];
+%     label = [];
+%     for sess = 1:NbrSess(sub)    
+%         for tr = 1:8*size(classProb,1)
+%             Lsub(tr,sess) = sub_labels(tr,1,sess);
+%             %rho(tr,:,sess) = sub_prob(:,:,tr,sess); %- Probability of groundtruth class (To be used as scrore in ROC)
+%             %label(tr,:,sess) = repmat(Lsub(tr,sess),1,numel(rho(tr,:,sess)));
+%             
+%             c = zeros(numel(unique(sub_labels)),1);
+%             c(Lsub(tr,sess)) = 1;
+%             rho(tr,:,:) = sub_prob(:,:,tr,sess); %- Probability of groundtruth class (To be used as scrore in ROC)
+%             delta(tr,:,:) = sub_grad(:,:,tr,sess); %- gradient of groundtruth class (To be used as scrore in ROC)
+%             label(tr,:,:) = repmat(c,1,size(sub_prob,2));
+%         end
+%         rho2 = permute(rho,[2 1 3]);
+%         rho3 = rho2(:,:);
+%         delta2 = permute(delta,[2 1 3]);
+%         delta3 = delta2(:,:);
+%         label2 = permute(label,[2 1 3]);
+%         label3 = label2(:,:);
+%         
+%         rho4 = [rho4 rho3];
+%         delta4 = [delta4 delta3];
+%         label4 = [label4 label3];
+%     end   
+% end
+% plotroc(label4, rho4);
+% plotroc(label4, delta4);
+% [tpr,fpr,thresholds] = roc(label4, rho4);
+% [tpr_d,fpr_d,thresholds_d] = roc(label4, delta4);
+% chance = [0 1];
+% figure,
+% plot([0 1], chance,'--r','LineWidth', 1, 'DisplayName', 'Random guess');
+% legend('-DynamicLegend');
+% hold all
+% marker = ['h','p','s','d'];
+% color = ['b','g','r','c'];
+% legends = {'Resting class', '13Hz class', '21Hz class', '17Hz class'};
+% for i = 1:numel(unique(Labels))
+%     plot([fpr{i} 1], [tpr{i} 1], color(i), 'LineWidth', 2, 'MarkerSize',4, 'DisplayName', legends{i})
+%     %legend('cl')
+% end
+% xlabel('FPR or (1-specificity)');
+% ylabel('TPR or sensitivity');
+% set(gca,'FontSize',14,'fontWeight','normal')
+% set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')
+% 
+% figure,
+% plot([0 1], chance,'--r','LineWidth', 1, 'DisplayName', 'Random guess');
+% legend('-DynamicLegend');
+% hold all
+% marker = ['h','p','s','d'];
+% color = ['b','g','r','c'];
+% legends = {'Resting class', '13Hz class', '21Hz class', '17Hz class'};
+% for i = 1:numel(unique(Labels))
+%     plot([fpr_d{i} 1], [tpr_d{i} 1], color(i), 'LineWidth', 2, 'MarkerSize',4, 'DisplayName', legends{i})
+%     %legend('cl')
+% end
+% xlabel('FPR or (1-specificity)');
+% ylabel('TPR or sensitivity');
+% set(gca,'FontSize',14,'fontWeight','normal')
+% set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')
 
-
-
-
+%% PLOT BARS
+Y = [[70.8; 87.3; 87.7], [74.8; 79.1; 79.5]];
+figure,
+bar(Y)
+%xlabel('FPR or (1-specificity)');
+ylabel('Average classification accuracy (%)');
+set(gca,'FontSize',14,'fontWeight','normal')
+set(findall(gcf,'type','text'),'FontSize',14,'fontWeight','normal')

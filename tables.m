@@ -14,11 +14,11 @@ load ('CCA/nakanishi2014.mat')
 acNak = acSubMean*100;
 itrNak = itr;
 %-- Load MDRM Results
-load offline_basic_potato_3class
+load('./results/offline_basic_potato_3class.mat')
 acMDRM = resMatrix(:,3,1)*100;
 itrMDRM = itr;
 %-- Loas MDRM opt. Results 
-load offline_opt_potato_3class
+load('./results/offline_opt_potato_3class.mat')
 acMDRMopt = resMatrix(:,3,1)*100;
 itrMDRMopt = itr;
 
@@ -69,17 +69,17 @@ disp('---------------------------------------------------');
 
 %% ONLINE RESULTS TABLE
 %-- Load online cum results
-load online_cum_3class
+load('./results/online_cum_3class')
 acCum = resMatrix(:,3)*100;
 delCum = del_sub_all';
 itrCum = itr';
 %-- Load online cum+curve+potato
-load online_curve_potato_3class.mat
+load('./results/online_curve_potato_3class.mat')
 acCur = resMatrix(:,3)*100;
 delCur = del_sub_all';
 itrCur = itr';
 %-- Load online cum+curve+potato
-load online_curve_3class.mat
+load('./results/online_curve_3class.mat')
 acCurPot = resMatrix(:,3)*100;
 delCurPot = del_sub_all';
 itrCurPot = itr';
@@ -103,17 +103,17 @@ disp('---------------------------------------------------');
 %###################################################################################################################################
 %% ONLINE RESULTS TABLE
 %-- Load online cum results
-load online_cum_4class
+load('./results/online_cum_4class.mat')
 acCum = resMatrix(:,3)*100;
 delCum = del_sub_all';
 itrCum = itr';
 %-- Load online cum+curve+potato
-load online_curve_4class.mat
+load('./results/online_curve_4class.mat')
 acCur = resMatrix(:,3)*100;
 delCur = del_sub_all';
 itrCur = itr';
 %-- Load online cum+curve+potato
-load online_curve_potato_4class.mat
+load('./results/online_curve_potato_4class.mat')
 acCurPot = resMatrix(:,3)*100;
 delCurPot = del_sub_all';
 itrCurPot = itr';
